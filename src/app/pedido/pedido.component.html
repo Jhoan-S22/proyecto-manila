@@ -1,0 +1,239 @@
+<div class="container py-4">
+
+    <!-- Encabezado de la página -->
+    <div class="text-center mb-4">
+    <span class="badge bg-success text-white text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
+        Resumen de Compra
+    </span>
+    <h1 class="display-4 fw-bold text-dark">Tu Pedido</h1>
+    <p class="lead text-muted col-lg-8 mx-auto">
+        Revisa los productos seleccionados de nuestro menú y confirma la dirección de entrega.
+    </p>
+    </div>
+
+    <!-- ESTADO 1: Vista de Confirmación y Plantilla del Comprobante (PDF) -->
+  <div *ngIf="pedidoEnviado" class="my-4">
+    
+    <div class="alert alert-success text-center border-0 shadow-sm rounded-4 p-4 mb-4 no-print">
+        <i class="bi bi-check-circle-fill text-success display-4 d-block mb-2"></i>
+        <h3 class="fw-bold text-success mb-2">¡Pedido Confirmado con Éxito!</h3>
+        <p class="mb-3">Selecciona "Guardar como PDF" en la ventana emergente que se ha abierto.</p>
+        <div class="d-flex justify-content-center gap-2">
+        <button (click)="descargarPDF()" class="btn btn-outline-success rounded-pill px-4 btn-sm fw-bold">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Abrir de nuevo ventana de PDF
+        </button>
+        <button (click)="pedidoEnviado = false" class="btn btn-success rounded-pill px-4 btn-sm fw-bold">
+            Realizar otro pedido
+        </button>
+        </div>
+    </div>
+
+    <!-- COMPROBANTE OFICIAL DESTINADO AL PDF (id="comprobante-pdf") -->
+    <div id="comprobante-pdf" class="card border border-2 rounded-4 p-5 bg-white shadow-sm mx-auto" style="max-width: 750px;">
+        
+        <!-- Encabezado del Comprobante -->
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-0">RESTAURANTE MANILA</h2>
+            <small class="text-muted d-block">Comprobante Oficial de Pedido</small>
+            <small class="text-muted">Fecha: {{ pedidoActual.fecha }}</small>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-dark text-warning px-3 py-2 fs-6 rounded-pill">MANILA APP</span>
+        </div>
+        </div>
+
+        <!-- Datos del Cliente desde la Entidad Pedido -->
+        <div class="bg-light p-3 rounded-3 mb-4">
+        <h6 class="fw-bold text-dark mb-2">Datos del Cliente y Entrega:</h6>
+        <div class="row text-muted small">
+            <div class="col-6"><strong>Cliente:</strong> {{ pedidoActual.nombreCliente }}</div>
+            <div class="col-6"><strong>Teléfono:</strong> {{ pedidoActual.celularCliente }}</div>
+            <div class="col-12 mt-1"><strong>Dirección:</strong> {{ pedidoActual.direccionCliente }}</div>
+        </div>
+        </div>
+
+        <!-- Tabla de Productos del Comprobante -->
+        <h6 class="fw-bold text-dark mb-2">Detalle de Productos:</h6>
+        <table class="table table-bordered align-middle mb-4">
+        <thead class="table-dark">
+            <tr>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th class="text-center">Cant.</th>
+            <th class="text-end">Precio Unit.</th>
+            <th class="text-end">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of itemsComprobante">
+            <td>{{ item.nombre }}</td>
+            <td><span class="badge bg-secondary">{{ item.tipo | uppercase }}</span></td>
+            <td class="text-center">{{ item.cantidad }}</td>
+            <td class="text-end">${{ item.precio | number }}</td>
+            <td class="text-end fw-bold">${{ (item.precio * item.cantidad) | number }}</td>
+            </tr>
+        </tbody>
+        </table>
+
+        <!-- Resumen de Totales del Comprobante -->
+        <div class="row justify-content-end">
+        <div class="col-6">
+            <ul class="list-group list-group-flush text-end">
+            <li class="list-group-item d-flex justify-content-between border-0 px-0 py-1">
+                <span class="text-muted">Subtotal:</span>
+                <span class="fw-semibold">${{ pedidoActual.subtotal | number }} COP</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between border-0 px-0 py-1">
+                <span class="text-muted">Envío:</span>
+                <span class="fw-semibold">${{ pedidoActual.costoEnvio | number }} COP</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between border-0 px-0 pt-2 fs-5 fw-bold text-success">
+                <span>Total Pagado:</span>
+                <span>${{ pedidoActual.total | number }} COP</span>
+            </li>
+            </ul>
+        </div>
+        </div>
+
+        <div class="text-center border-top pt-3 mt-4">
+        <small class="text-muted">¡Gracias por elegir Restaurante MANILA!</small>
+        </div>
+
+    </div>
+
+    </div>
+
+    <!-- ESTADO 2: Carrito Vacío -->
+  <div *ngIf="!pedidoEnviado && items().length === 0" class="text-center py-5">
+    <div class="card border-0 shadow-sm rounded-4 p-5 bg-white max-w-md mx-auto">
+        <i class="bi bi-cart-x text-muted display-1 mb-3"></i>
+        <h3 class="fw-bold text-dark mb-2">Tu pedido está vacío</h3>
+        <p class="text-muted mb-4">Aún no has agregado ninguna comida o bebida desde nuestro menú.</p>
+        <div class="d-flex justify-content-center gap-3">
+        </div>
+    </div>
+    </div>
+
+    <!-- ESTADO 3: Carrito con Productos y Formulario de Registro -->
+  <div *ngIf="!pedidoEnviado && items().length > 0" class="row g-4">
+    
+    <!-- Tabla Principal de Productos Seleccionados -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-dark mb-0">Productos Seleccionados</h4>
+            <button (click)="vaciarCarrito()" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+            <i class="bi bi-trash3-fill me-1"></i> Vaciar Pedido
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+            <thead class="table-light">
+                <tr>
+                <th>Producto</th>
+                <th>Tipo</th>
+                <th>Precio Unit.</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th class="text-end">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items()">
+                <td>
+                    <div class="d-flex align-items-center gap-3">
+                    <img [src]="item.imagen" [alt]="item.nombre" class="rounded-3 object-fit-cover" width="50" height="50">
+                    <span class="fw-bold text-dark">{{ item.nombre }}</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge rounded-pill" [ngClass]="item.tipo === 'comida' ? 'bg-warning text-dark' : 'bg-primary'">
+                    {{ item.tipo | uppercase }}
+                    </span>
+                </td>
+                <td class="fw-semibold">${{ item.precio | number }}</td>
+                <td>
+                    <span class="badge bg-light text-dark border px-3 py-2 fs-6 fw-bold">x{{ item.cantidad }}</span>
+                </td>
+                <td class="fw-bold text-success">${{ (item.precio * item.cantidad) | number }}</td>
+                <td class="text-end">
+                    <button (click)="eliminarItem(item.id)" class="btn btn-sm btn-light text-danger rounded-circle shadow-sm">
+                    <i class="bi bi-x-lg"></i>
+                    </button>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Datos vinculado a la Entidad Pedido -->
+    <div class="col-lg-4">
+        
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <h4 class="fw-bold text-dark mb-3">Resumen de Cuenta</h4>
+        <div class="d-flex justify-content-between mb-2 text-muted">
+            <span>Subtotal:</span>
+            <span class="fw-semibold text-dark">${{ subtotal() | number }} COP</span>
+        </div>
+        <div class="d-flex justify-content-between mb-3 text-muted">
+            <span>Costo de envío:</span>
+            <span class="fw-semibold text-dark">${{ costoEnvio() | number }} COP</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between align-items-center my-2">
+            <span class="fs-5 fw-bold text-dark">Total a pagar:</span>
+            <span class="fs-4 fw-bold text-success">${{ total() | number }} COP</span>
+        </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h4 class="fw-bold text-dark mb-3">Datos de Entrega</h4>
+        <form (ngSubmit)="confirmarPedido()">
+            <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">Nombre Completo</label>
+            <input
+                type="text"
+                [(ngModel)]="pedidoActual.nombreCliente"
+                name="nombreCliente"
+                class="form-control bg-light border-0"
+                placeholder="Ej: Jhoan Maya"
+                required
+            >
+            </div>
+            <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">Teléfono / Celular</label>
+            <input
+                type="text"
+                [(ngModel)]="pedidoActual.celularCliente"
+                name="celularCliente"
+                class="form-control bg-light border-0"
+                placeholder="Ej: 300 123 4567"
+                required
+            >
+            </div>
+            <div class="mb-4">
+            <label class="form-label small fw-bold text-muted">Dirección de Entrega</label>
+            <input
+                type="text"
+                [(ngModel)]="pedidoActual.direccionCliente"
+                name="direccionCliente"
+                class="form-control bg-light border-0"
+                placeholder="Ej: Calle 10 # 15-20"
+                required
+            >
+            </div>
+            <button type="submit" class="btn btn-success w-100 fw-bold rounded-pill py-3 shadow-sm">
+            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Confirmar y Descargar PDF
+            </button>
+        </form>
+        </div>
+
+    </div>
+
+    </div>
+
+</div>

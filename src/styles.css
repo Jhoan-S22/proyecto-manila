@@ -1,0 +1,14 @@
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+@media print {
+  /* Oculta la navegación, el footer y cualquier elemento con la clase no-print */
+    .no-print,
+    app-navegacion,
+    app-footer {
+    display: none !important;
+    }
+}

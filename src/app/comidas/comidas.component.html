@@ -1,0 +1,142 @@
+<div class="container py-4">
+
+    <!-- Encabezado / Texto Introductorio -->
+    <div class="text-center mb-4">
+    <span class="badge bg-warning text-dark text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
+        Nuestro Menú
+    </span>
+    <h1 class="display-4 fw-bold text-dark">Nuestras Comidas</h1>
+    <p class="lead text-muted col-lg-8 mx-auto">
+        Explora nuestra selección completa de platos gourmet.
+    </p>
+    </div>
+
+    <!-- Panel de Filtros y Búsquedas -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5 bg-white">
+    <div class="row g-3 align-items-center">
+        
+        <!-- Ver Todos / Filtrar por Categoría -->
+        <div class="col-md-4">
+        <label class="form-label small fw-bold text-muted">Filtrar por Categoría</label>
+        <select
+            [(ngModel)]="categoriaSeleccionada"
+            (change)="cargarComidasIniciales()"
+            class="form-select bg-light border-0"
+        >
+            <option value="TODAS">Todas las Comidas</option>
+            <option value="Seafood">Mariscos (Seafood)</option>
+            <option value="Pasta">Pastas</option>
+            <option value="Beef">Carne de Res (Beef)</option>
+            <option value="Chicken">Pollo (Chicken)</option>
+            <option value="Dessert">Postres (Dessert)</option>
+        </select>
+        </div>
+
+        <!-- Buscar por Nombre -->
+        <div class="col-md-4">
+        <label class="form-label small fw-bold text-muted">Buscar por Nombre</label>
+        <div class="input-group">
+            <input
+            type="text"
+            [(ngModel)]="busquedaNombre"
+            (keyup.enter)="buscarPorNombre()"
+            class="form-control bg-light border-0"
+            placeholder="Ej: Chicken, Pasta..."
+            >
+            <button (click)="buscarPorNombre()" class="btn btn-warning text-dark font-bold">
+            <i class="bi bi-search"></i>
+            </button>
+        </div>
+        </div>
+
+        <!-- Buscar por Ingrediente -->
+        <div class="col-md-4">
+        <label class="form-label small fw-bold text-muted">Buscar por Ingrediente</label>
+        <div class="input-group">
+            <input
+            type="text"
+            [(ngModel)]="busquedaIngrediente"
+            (keyup.enter)="buscarPorIngrediente()"
+            class="form-control bg-light border-0"
+            placeholder="Ej: Garlic, Chicken..."
+            >
+            <button (click)="buscarPorIngrediente()" class="btn btn-dark">
+            <i class="bi bi-funnel-fill"></i>
+            </button>
+        </div>
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Spinner de Carga -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Consultando las comidas desde la API...</p>
+    </div>
+
+    <!-- Sin Resultados -->
+  <div *ngIf="!cargando && comidas.length === 0" class="alert alert-light text-center border rounded-4 py-4">
+    <i class="bi bi-exclamation-circle text-muted fs-2 d-block mb-2"></i>
+    No se encontraron comidas para el criterio seleccionado.
+    </div>
+
+    <!-- Grilla de Tarjetas -->
+  <div *ngIf="!cargando && comidas.length > 0" class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let comida of comidas">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        
+        <div class="position-relative">
+            <img
+            [src]="comida.imagen"
+            [alt]="comida.nombre"
+            class="card-img-top object-fit-cover w-100"
+            style="height: 220px;"
+            >
+            <span class="badge bg-dark text-warning position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+            {{ comida.categoria }}
+            </span>
+        </div>
+
+        <div class="card-body d-flex flex-column justify-content-between p-4">
+            <div>
+            <!-- Nombre del Plato -->
+            <h5 class="fw-bold card-title text-dark mb-2">{{ comida.nombre }}</h5>
+            
+            <!-- Lista de Ingredientes Debajo del Nombre -->
+            <div class="mb-3">
+                <small class="text-muted d-block fw-semibold mb-1">Ingredientes:</small>
+                <div class="d-flex flex-wrap gap-1">
+                <span
+                  *ngFor="let ingrediente of comida.ingredientes"
+                    class="badge bg-light text-secondary border fw-normal px-2 py-1"
+                >
+                    {{ ingrediente }}
+                </span>
+                </div>
+            </div>
+            </div>
+
+            <!-- Precio y Botón Añadir -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-2">
+            <div>
+                <small class="text-muted d-block">Precio COP</small>
+                <span class="fs-5 fw-bold text-success">${{ comida.precio | number }}</span>
+            </div>
+            <button
+                (click)="agregarAlPedido(comida)"
+                class="btn btn-warning text-dark fw-bold rounded-pill px-3 btn-sm d-flex align-items-center gap-1 shadow-sm"
+            >
+                <i class="bi bi-plus-circle-fill"></i> Añadir
+            </button>
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+</div>

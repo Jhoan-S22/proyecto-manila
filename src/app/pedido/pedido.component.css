@@ -1,0 +1,29 @@
+/* Estilos normales para pantalla */
+#comprobante-pdf {
+    background-color: #ffffff;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+    }
+
+  #comprobante-pdf, #comprobante-pdf * {
+    visibility: visible;
+    }
+
+    #comprobante-pdf {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    }
+
+    .no-print {
+    display: none !important;
+    }
+}

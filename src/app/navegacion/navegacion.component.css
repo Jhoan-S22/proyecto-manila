@@ -1,0 +1,64 @@
+/* Transición suave para todos los enlaces del menú */
+.nav-link {
+    color: #d1d5db !important;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Efecto hover: cambio de color y ligero desplazamiento hacia arriba */
+.nav-link:hover {
+    color: #ffc107 !important; /* Dorado/Amarillo warning */
+    transform: translateY(-1px);
+}
+
+/* Indicador con línea dorada animada debajo del enlace activo */
+.nav-link.active {
+    color: #ffc107 !important;
+    font-weight: 700;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    background-color: #ffc107;
+    border-radius: 2px;
+}
+
+/* Animación sutil al pasar el cursor sobre el logo */
+.navbar-brand img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5) !important;
+}
+
+/* Efecto al pasar sobre el botón de Mi Pedido */
+.btn-warning {
+    transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800 !important;
+    transform: scale(1.04);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4) !important;
+}
+
+.navbar-brand span {
+  font-family: 'Montserrat', sans-serif; /* Tipografía moderna y limpia */
+  letter-spacing: 2.5px;                  /* Espaciado elegante entre letras */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Sombra suave para dar profundidad */
+    transition: color 0.3s ease;
+}
+
+/* Efecto al pasar el cursor sobre la marca */
+.navbar-brand:hover span {
+    color: #ffffff !important;
+  text-shadow: 0 0 8px rgba(255, 193, 7, 0.7); /* Resplandor dorado */
+}

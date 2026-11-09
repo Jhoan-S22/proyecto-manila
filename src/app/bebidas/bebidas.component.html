@@ -1,0 +1,148 @@
+<div class="container py-4">
+
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+    <span class="badge bg-primary text-white text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
+        Coctelería & Bar
+    </span>
+    <h1 class="display-4 fw-bold text-dark">Nuestras Bebidas</h1>
+    <p  class="lead text-muted col-lg-8 mx-auto">
+        Explora nuestra carta completa de cócteles y refrescos.
+    </p>
+    </div>
+
+    <!-- Panel de Filtros exigidos -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5 bg-white">
+    <div class="row g-3 align-items-center">
+        
+        <!-- Buscar por Nombre -->
+        <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted">Cóctel por Nombre</label>
+        <div class="input-group">
+            <input
+            type="text"
+            [(ngModel)]="busquedaNombre"
+            (keyup.enter)="buscarPorNombre()"
+            class="form-control bg-light border-0"
+            placeholder="Ej: Margarita..."
+            >
+            <button (click)="buscarPorNombre()" class="btn btn-primary">
+            <i class="bi bi-search"></i>
+            </button>
+        </div>
+        </div>
+
+        <!-- Buscar por Ingrediente -->
+        <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted">Ingrediente por Nombre</label>
+        <div class="input-group">
+            <input
+            type="text"
+            [(ngModel)]="busquedaIngrediente"
+            (keyup.enter)="buscarPorIngrediente()"
+            class="form-control bg-light border-0"
+            placeholder="Ej: Gin, Vodka..."
+            >
+            <button (click)="buscarPorIngrediente()" class="btn btn-dark">
+            <i class="bi bi-funnel-fill"></i>
+            </button>
+        </div>
+        </div>
+
+        <!-- Filtrar por Tipo de Bebida -->
+        <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted">Tipo de Bebida</label>
+        <select
+            [(ngModel)]="tipoSeleccionado"
+            (change)="cargarBebidasIniciales()"
+            class="form-select bg-light border-0"
+        >
+            <option value="TODAS">Todas</option>
+            <option value="Alcoholic">Alcohólica (Alcoholic)</option>
+            <option value="Non_Alcoholic">Sin Alcohol (Non Alcoholic)</option>
+        </select>
+        </div>
+
+        <!-- Filtrar por Categoría -->
+        <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted">Categoría</label>
+        <select
+            [(ngModel)]="categoriaSeleccionada"
+            (change)="cargarBebidasIniciales()"
+            class="form-select bg-light border-0"
+        >
+            <option value="TODAS">Todas las categorías</option>
+            <option value="Ordinary_Drink">Bebida Ordinaria</option>
+            <option value="Cocktail">Cóctel</option>
+        </select>
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Spinner de Carga -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Consultando la API de bebidas...</p>
+    </div>
+
+    <!-- Grilla de Tarjetas -->
+  <div *ngIf="!cargando && bebidas.length > 0" class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let bebida of bebidas">
+        <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+        
+        <div class="position-relative">
+            <img
+            [src]="bebida.imagen"
+            [alt]="bebida.nombre"
+            class="card-img-top object-fit-cover w-100"
+            style="height: 220px;"
+            >
+            <span
+            class="badge position-absolute top-0 start-0 m-3 px-3 py-2 rounded-pill shadow-sm"
+            [ngClass]="bebida.tipo === 'Alcoholic' ? 'bg-danger' : 'bg-success'"
+            >
+            {{ bebida.tipo === 'Alcoholic' ? '🍷 Alcohólica' : '🍃 Sin Alcohol' }}
+            </span>
+        </div>
+
+        <div class="card-body d-flex flex-column justify-content-between p-4">
+            <div>
+            <h5 class="fw-bold card-title text-dark mb-2">{{ bebida.nombre }}</h5>
+            
+            <!-- Ingredientes debajo del nombre -->
+            <div class="mb-3">
+                <small class="text-muted d-block fw-semibold mb-1">Ingredientes:</small>
+                <div class="d-flex flex-wrap gap-1">
+                <span
+                  *ngFor="let ingrediente of bebida.ingredientes"
+                    class="badge bg-light text-secondary border fw-normal px-2 py-1"
+                >
+                    {{ ingrediente }}
+                </span>
+                </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-2">
+            <div>
+                <small class="text-muted d-block">Precio COP</small>
+                <span class="fs-5 fw-bold text-success">${{ bebida.precio | number }}</span>
+            </div>
+            <button
+                (click)="agregarAlPedido(bebida)"
+                class="btn btn-primary text-white fw-bold rounded-pill px-3 btn-sm d-flex align-items-center gap-1 shadow-sm"
+            >
+                <i class="bi bi-plus-circle-fill"></i> Añadir
+            </button>
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+</div>

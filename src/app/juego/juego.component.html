@@ -1,0 +1,77 @@
+<div class="container py-4">
+
+    <!-- Encabezado -->
+    <div class="text-center mb-4">
+    <span class="badge bg-warning text-dark text-uppercase px-3 py-2 rounded-pill fw-bold mb-2">
+        Reto Manila
+    </span>
+    <h1 class="display-4 fw-bold text-dark">Juego de Memoria (4x4)</h1>
+    <p class="lead text-muted col-lg-8 mx-auto">
+        Encuentra la <strong>única pareja real</strong> (foto de comida + foto de bebida) oculta entre las 16 casillas. ¡Las cartas con <strong>X</strong> no hacen pareja!
+    </p>
+    </div>
+
+    <!-- Marcadores -->
+    <div class="d-flex justify-content-center align-items-center gap-4 mb-4">
+    <div class="bg-white shadow-sm border rounded-pill px-4 py-2 fw-bold text-dark">
+        Intentos: <span class="text-primary fs-5">{{ intentos }}</span>
+    </div>
+    <button (click)="iniciarJuego()" class="btn btn-outline-dark rounded-pill px-4 fw-bold shadow-sm">
+        <i class="bi bi-shuffle me-1"></i> Mezclar Tablero
+    </button>
+    </div>
+
+    <!-- Mensaje de Felicitaciones al Ganar -->
+  <div *ngIf="juegoCompletado" class="alert alert-success text-center border-0 shadow-lg rounded-4 p-4 mb-4 max-w-md mx-auto">
+    <i class="bi bi-trophy-fill text-warning display-3 d-block mb-2"></i>
+    <h2 class="fw-bold text-success mb-2">¡Felicitaciones, Ganaste!</h2>
+    <p class="lead text-muted mb-2">¡Encontraste la pareja de Comida y Bebida en <strong>{{ intentos }}</strong> intento(s)!</p>
+    <small class="text-muted d-block">Mezclando de nuevo las 16 casillas en posiciones distintas...</small>
+    </div>
+
+    <!-- Tablero 4x4 (16 Casillas) -->
+    <div class="row g-3 justify-content-center mx-auto" style="max-width: 600px;">
+    <div class="col-3" *ngFor="let carta of cartas">
+        
+        <div
+        (click)="seleccionarCarta(carta)"
+        class="card text-center shadow-sm rounded-4 border-0 select-none cursor-pointer overflow-hidden position-relative"
+        [ngClass]="{
+            'bg-dark text-warning': !carta.volteada && !carta.emparejada,
+            'bg-white border-2 border-warning': (carta.volteada || carta.emparejada) && carta.imagen !== 'X',
+            'bg-light border-2 border-danger': (carta.volteada || carta.emparejada) && carta.imagen === 'X',
+            'opacity-50': carta.emparejada
+        }"
+        style="height: 125px; transition: transform 0.2s;"
+        >
+        <!-- Reverso (Boca abajo) -->
+        <div *ngIf="!carta.volteada && !carta.emparejada" class="d-flex flex-column align-items-center justify-content-center h-100">
+            <i class="bi bi-cup-hot-fill fs-2 mb-1"></i>
+            <span class="fw-bold small">MANILA</span>
+        </div>
+
+        <!-- Frente: O Es una de las 2 Fotos o es una X -->
+        <div *ngIf="carta.volteada || carta.emparejada" class="h-100 d-flex flex-column justify-content-center align-items-center">
+            
+            <!-- Si es una de las 2 Fotos Reales-->
+          <ng-container *ngIf="carta.imagen !== 'X'; else esX">
+            <img [src]="carta.imagen" [alt]="carta.nombre" class="w-100 object-fit-cover" style="height: 90px;">
+            <div class="p-1 text-truncate bg-white w-100">
+                <small class="fw-bold text-dark d-block" style="font-size: 0.7rem;">{{ carta.nombre }}</small>
+            </div>
+            </ng-container>
+
+            <!-- Si es una de las 14 Cartas Falsas con "X" -->
+            <ng-template #esX>
+            <i class="bi bi-x-lg text-danger display-4 fw-bold"></i>
+            <small class="text-muted fw-semibold" style="font-size: 0.75rem;">Incorrecto</small>
+            </ng-template>
+
+        </div>
+
+        </div>
+
+    </div>
+    </div>
+
+</div>

@@ -1,0 +1,31 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 12px;
+    background-color: #212529;
+    padding: 14px;
+    border-radius: 16px;
+    aspect-ratio: 1 / 1;
+}
+
+.grid-item {
+    user-select: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    aspect-ratio: 1 / 1;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4) !important;
+}
+
+.casilla-tapada {
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.casilla-tapada:hover {
+    background-color: #2c3034 !important;
+}

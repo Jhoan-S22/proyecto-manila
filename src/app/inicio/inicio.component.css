@@ -1,0 +1,16 @@
+.hero-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+}
+/* Efecto hover suave en las tarjetas destacadas */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+.fw-extrabold {
+    font-weight: 800;
+}
