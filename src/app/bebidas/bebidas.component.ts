@@ -14,6 +14,9 @@ import { Bebidas } from '../entidades/bebidas';
 })
 export class BebidasComponent implements OnInit {
 
+  mensajeToast: string = '';
+  mostrarToast: boolean = false;
+
   private bebidaService = inject(BebidaService);
   private pedidoService = inject(CompartirDatosService);
 
@@ -78,5 +81,11 @@ export class BebidasComponent implements OnInit {
       imagen: bebida.imagen,
       tipo: 'bebida'
     });
+    this.mensajeToast = `¡${bebida.nombre} se ha agregado al pedido!`;
+    this.mostrarToast = true;
+
+    setTimeout(() => {
+      this.mostrarToast = false;
+    }, 1500);
   }
 }

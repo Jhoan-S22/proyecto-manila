@@ -24,6 +24,9 @@ export class ComidasComponent implements OnInit {
   busquedaIngrediente: string = '';
   categoriaSeleccionada: string = 'TODAS';
 
+  mensajeToast: string = '';
+  mostrarToast: boolean = false;
+
   ngOnInit(): void {
     this.cargarComidasIniciales();
   }
@@ -96,5 +99,11 @@ export class ComidasComponent implements OnInit {
       imagen: comida.imagen,
       tipo: 'comida'
     });
+    this.mensajeToast = `¡${comida.nombre} se ha agregado al pedido!`;
+    this.mostrarToast = true;
+
+    setTimeout(() => {
+      this.mostrarToast = false;
+    }, 1500);
   }
 }
